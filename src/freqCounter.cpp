@@ -2,7 +2,6 @@
 #include <iostream>
 #include <ostream>
 #include <string>
-#include <vector>
 #include <fstream>
 #include "freqCounter.hpp"
 
