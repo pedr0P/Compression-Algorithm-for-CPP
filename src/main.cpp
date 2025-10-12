@@ -1,7 +1,7 @@
 #include <iostream>
-#include "initializer.hpp"
-#include "freqCounter.hpp"
-#include "TreeGenerator.hpp"
+#include "initializer.cpp"
+#include "freqCounter.cpp"
+#include "TreeGenerator.cpp"
 
 void printMap(const std::unordered_map<std::string, size_t>& mapa) {
     for (const auto& par : mapa) {
@@ -21,15 +21,13 @@ int main(int argc, char *argv[]) {
 
     auto freqtable = counter->readFile(argv[1]);
 
-
-
-    
     //testing things
     printMap(freqtable);
+
     std::cout << "\n AGORA TESTANDO A PRIORITY QUEUE: \n";
 
 
-    //adding everything at priority list
+    // adding everything at priority list
     for (const auto& par : freqtable) {
         tree->pq.push(new Node(nullptr, nullptr, nullptr, par.first, par.second));
     }

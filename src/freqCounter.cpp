@@ -22,7 +22,7 @@ std::unordered_map<std::string, size_t> freqCounter::readFile(std::string filena
             while (indexOfS != std::string::npos){
                 line.erase(indexOfS, s.length());
                 freqTable[s] += 1;
-                std::cout << line << std::endl;
+                // std::cout << line << std::endl;
                 indexOfS = line.find(s);
             }
         }
