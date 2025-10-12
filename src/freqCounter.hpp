@@ -6,9 +6,14 @@
 class freqCounter {
     public:
     std::vector<std::string> WordsTable{
+        "#define",
+        "#include",
+
         "int",
         "string",
         "char",
+        "class",
+        "struct",
         "vector",
         "array",
         "bool",
@@ -24,7 +29,6 @@ class freqCounter {
         "do",
 
         "return",
-        "include",
         "break",
         "const",
         "push",
