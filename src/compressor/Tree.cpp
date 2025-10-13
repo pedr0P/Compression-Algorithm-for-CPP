@@ -4,9 +4,9 @@ Node* Tree::generateTree(std::priority_queue<Node*, std::vector<Node*>, CompareB
     Node* nd = new Node();
     nd = pq.top();
     pq.pop();
+
     Node* father = new Node();
     nd->father = father;
-    father->value = nd->value;
     father->right = nd;
 
     while (!pq.empty()) {
@@ -14,12 +14,15 @@ Node* Tree::generateTree(std::priority_queue<Node*, std::vector<Node*>, CompareB
         pq.pop();
 
         father->value += father->left->value;
-        father->father = new Node();
+        father->value += father->right->value;
 
-        father->father->right = father;
-        father = father->father;
+        if (!pq.empty()) {
+            father->father = new Node();
+            father->father->right = father;
+            father = father->father;
+        }
     }
-    return nd;
+    return father;
 }
 
 void Tree::codifyTree(Node* root){
@@ -33,5 +36,5 @@ void Tree::codifyTree(Node* root){
 }
 
 void Tree::compress(std::string filename, Node* root){
-    
+
 }
