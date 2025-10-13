@@ -38,11 +38,6 @@ int main(int argc, char *argv[]) {
 
     auto freqtable = counter->readFile(argv[1]);
 
-
-
-
-
-
     /*
     //testing things
 

@@ -36,7 +36,7 @@ class freqCounter {
         "get",
         "set",
     };
-
+  
     std::unordered_map<std::string, size_t> readFile(std::string);
 
 
