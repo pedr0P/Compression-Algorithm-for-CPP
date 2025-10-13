@@ -2,7 +2,7 @@
 
 #include "../freqCounter/initializer.hpp"
 #include "../freqCounter/freqCounter.hpp"
-#include "TreeGenerator.hpp"
+#include "Tree.hpp"
 
 void printMap(const std::unordered_map<std::string, size_t>& mapa) {
     for (const auto& par : mapa) {

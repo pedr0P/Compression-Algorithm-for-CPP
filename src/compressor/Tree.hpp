@@ -4,9 +4,6 @@
 
 class Node{
     public:
-    Node* father = nullptr;
-    Node* left = nullptr;
-    Node* right = nullptr;
 
     Node* left;
     Node* right;

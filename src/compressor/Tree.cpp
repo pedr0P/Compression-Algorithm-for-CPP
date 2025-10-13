@@ -1,5 +1,4 @@
-#include "TreeGenerator.hpp"
-#include <iostream>
+#include "Tree.hpp"
 
 Node* Tree::generateTree(std::priority_queue<Node*, std::vector<Node*>, CompareByKey> pq){
     Node* nd = new Node();
