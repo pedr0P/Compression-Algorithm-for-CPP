@@ -36,9 +36,7 @@ class freqCounter {
         "get",
         "set",
     };
-
-    std::vector<std::string> lineParser(std::string);
-
+  
     std::unordered_map<std::string, size_t> readFile(std::string);
 
 

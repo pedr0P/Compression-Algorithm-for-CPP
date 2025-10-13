@@ -7,7 +7,7 @@
 
 std::unordered_map<std::string, size_t> freqCounter::readFile(std::string filename){
 
-    std::unordered_map<std::string, size_t> freqTable;
+    std::unordered_map<std::string, size_t> freqtable;
     std::ifstream file;
     std::string line;
 
@@ -21,19 +21,20 @@ std::unordered_map<std::string, size_t> freqCounter::readFile(std::string filena
             size_t indexOfS = line.find(s);
             while (indexOfS != std::string::npos){
                 line.erase(indexOfS, s.length());
-                freqTable[s] += 1;
-                // std::cout << line << std::endl;
+
+                freqtable[s] += 1;
+
                 indexOfS = line.find(s);
             }
         }
+      
         for (char c : line){
-            freqTable[std::string(1, c)] += 1;
+            freqtable[std::string(1, c)] += 1;
         }
     }
 
     file.close();
 
-
-    return freqTable;
+    return freqtable;
 };
 
