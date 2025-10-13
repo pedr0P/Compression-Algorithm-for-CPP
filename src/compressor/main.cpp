@@ -1,6 +1,6 @@
 #include <iostream>
-#include "initializer.hpp"
-#include "freqCounter.hpp"
+#include "../freqCounter/initializer.hpp"
+#include "../freqCounter/freqCounter.hpp"
 #include "TreeGenerator.hpp"
 
 void printMap(const std::unordered_map<std::string, size_t>& mapa) {

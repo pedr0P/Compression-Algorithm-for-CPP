@@ -7,9 +7,9 @@
 class Node{
     public:
 
-    Node* left = new Node();
-    Node* right = new Node();
-    Node* father = new Node();
+    Node* left;
+    Node* right;
+    Node* father;
     std::pair<std::string, size_t> pair;
     std::string symbol;
     size_t value;
