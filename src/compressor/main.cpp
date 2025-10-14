@@ -42,6 +42,10 @@ int main(int argc, char *argv[]) {
         tree->pq.push(new Node(nullptr, nullptr, par.first, par.second));
     }
 
+    Node* p = tree->generateTree(tree->pq);
+    tree->codifyTree(p);
+    tree->compress(argv[1], p);
+
     // Tests:
     //printing the priority_queue
     // while (!tree->pq.empty()) {
