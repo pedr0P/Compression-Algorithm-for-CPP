@@ -1,4 +1,3 @@
-
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -8,6 +7,16 @@ class freqCounter {
     std::vector<std::string> WordsTable{
         "#define",
         "#include",
+
+        "::",
+        "->",
+
+        ">>",
+        "<<",
+        "==",
+        "!=",
+        ">=",
+        "<=",
 
         "int",
         "string",
@@ -20,8 +29,8 @@ class freqCounter {
         "auto",
         "void",
 
-         "if",
-         "else",
+        "if",
+        "else",
         "switch",
         "case",
         "for",
@@ -35,6 +44,8 @@ class freqCounter {
         "pop",
         "get",
         "set",
+
+        "std",
     };
   
     std::unordered_map<std::string, size_t> readFile(std::string);

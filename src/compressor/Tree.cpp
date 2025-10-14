@@ -1,33 +1,26 @@
 #include "Tree.hpp"
+// With help (but not copying) from: https://www.geeksforgeeks.org/dsa/huffman-coding-greedy-algo-3
 
-Node* Tree::generateTree(std::priority_queue<Node*, std::vector<Node*>, CompareByKey> pq){
-    Node* nd = new Node();
-    nd = pq.top();
-    pq.pop();
-
-    Node* father = new Node();
-    nd->father = father;
-    father->right = nd;
-
-    while (!pq.empty()) {
-        father->left = pq.top();
+Node* Tree::generateTree(std::priority_queue<Node*, std::vector<Node*>, CompareByKey> &pq){
+    while (pq.size() >= 2) {
+        Node* left = pq.top();
         pq.pop();
 
-        father->value += father->left->value;
-        father->value += father->right->value;
+        Node* right = pq.top();
+        pq.pop();
 
-        if (!pq.empty()) {
-            father->father = new Node();
-            father->father->right = father;
-            father = father->father;
-        }
+        Node* nd = new Node(left, right, "" , left->value + right->value);
+
+        pq.push(nd);
     }
-    return father;
+    Node* tree = pq.top();
+    return tree;
 }
 
 void Tree::codifyTree(Node* root){
     if (root->left){
         root->left->code = root->code + "0";
+        codifyTree(root->left);
     }
     if (root->right){
         root->right->code = root->code + "1";
