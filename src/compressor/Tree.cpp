@@ -1,11 +1,12 @@
 #include "Tree.hpp"
-#include "../freqCounter/initializer.cpp"
-#include "../freqCounter/freqCounter.cpp"
+#include <algorithm>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <string>
 // With help (but not copying) from: https://www.geeksforgeeks.org/dsa/huffman-coding-greedy-algo-3
+
+Node* glob = nullptr;
 
 Node* Tree::generateTree(std::priority_queue<Node*, std::vector<Node*>, CompareByKey> &pq){
     while (pq.size() >= 2) {
@@ -23,23 +24,10 @@ Node* Tree::generateTree(std::priority_queue<Node*, std::vector<Node*>, CompareB
     return tree;
 }
 
-Node* glob = nullptr;
-
 void getNodeBySymbol(std::string symbol, Node* tree){
     if (symbol == tree->symbol) glob = tree;
     if (tree->left != nullptr) getNodeBySymbol(symbol, tree->left);
     if (tree->right != nullptr) getNodeBySymbol(symbol, tree->right);
-}
-
-void Tree::codifyTree(Node* root){
-    if (root->left){
-        root->left->code = root->code + "0";
-        codifyTree(root->left);
-    }
-    if (root->right){
-        root->right->code = root->code + "1";
-        codifyTree(root->right);
-    }
 }
 
 unsigned char to_bin(std::string str) {
@@ -60,6 +48,17 @@ unsigned char to_bin(std::string str) {
     return res;
 }
 
+void Tree::codifyTree(Node* root){
+    if (root->left){
+        root->left->code = root->code + "0";
+        codifyTree(root->left);
+    }
+    if (root->right){
+        root->right->code = root->code + "1";
+        codifyTree(root->right);
+    }
+}
+
 void Tree::compress(std::string filename, Node* root){
     std::vector<std::string> words;
     std::ifstream file;
@@ -71,47 +70,47 @@ void Tree::compress(std::string filename, Node* root){
 
     while (std::getline(file, line)){
         words.clear();
-        if (line.empty()){ continue; }
-
-        std::string str;
-        for (size_t i{0}; i < line.size(); ++i) {
-            char c = line[i];
-            if (c != ' ') {
-                str += c;
-            }
-            else {
-                if (!str.empty()) {
+        if (!line.empty()){
+            std::string str;
+            for (size_t i{0}; i < line.size(); ++i) {
+                char c = line[i];
+                if (c != ' ') {
+                    str += c;
+                }
+                else {
+                    if (!str.empty()) {
+                        words.push_back(str);
+                        str.clear();
+                    }
+                    words.push_back(" ");
+                    continue;
+                }
+                if (i == line.size()-1) {
                     words.push_back(str);
                     str.clear();
                 }
-                words.push_back(" ");
-                continue;
             }
-            if (i == line.size()-1) {
-                words.push_back(str);
-                str.clear();
-            }
-        }
 
-        for (size_t i{0}; i < words.size(); ++i){
-            getNodeBySymbol(words[i], root); 
-            if (glob  != nullptr) {
-                words[i] = glob->code;
-            }
-            else {
-                std::string tmp = "";
-                for (char c : words[i]){
-
-                    std::string s;
-                    s.push_back(c);
-
-                    getNodeBySymbol(s, root);
-                    tmp += glob->code;
+            for (size_t i{0}; i < words.size(); ++i){
+                getNodeBySymbol(words[i], root); 
+                if (glob  != nullptr) {
+                    words[i] = glob->code;
                 }
-                words[i] = tmp;
-            }
-            glob = nullptr;
-        } 
+                else {
+                    std::string tmp = "";
+                    for (char c : words[i]){
+
+                        std::string s;
+                        s.push_back(c);
+
+                        getNodeBySymbol(s, root);
+                        tmp += glob->code;
+                    }
+                    words[i] = tmp;
+                }
+                glob = nullptr;
+            } 
+        }
 
         std::ofstream outfile;
         if (isOpen) {
@@ -122,53 +121,26 @@ void Tree::compress(std::string filename, Node* root){
             isOpen = true;
         }
 
+        std::string buffer;
+        std::string tmp;
         for (std::string s : words){
-            outfile << to_bin(s);
+            while(buffer.size() <= 8) {
+                buffer += s;
+            }
+            while (buffer.size() > 8) {
+                tmp = buffer[buffer.size()-1];
+                buffer.pop_back();
+            }
+            std::cout << buffer << '\n';
+            outfile << to_bin(buffer);
+            std::reverse(tmp.begin(), tmp.end());
+            buffer = tmp;
+            tmp.clear();
         }
         outfile << '\n';
+
     }
 
     file.close();
 
-}
-void write_bits_to_file(std::string str, bool isOpen) {
-
-}
-void printTree(Node* node, const std::string& prefix = "", bool isLeft = true) {
-    if (node != nullptr) {
-        std::cout << prefix;
-        std::cout << (isLeft ? "├──" : "└──" );
-
-        // printing
-        std::cout << node->symbol << "(" << node->value << ")";
-        if (!node->code.empty()) {
-            std::cout << " Código: " << node->code;
-        }
-        std::cout << std::endl;
-
-        // recursive step
-        printTree(node->left, prefix + (isLeft ? "│   " : "    "), true);
-        printTree(node->right, prefix + (isLeft ? "│   " : "    "), false);
-    }
-}
-
-int main(int argc, char* argv[]) {
-    initializer* init = new initializer();
-    freqCounter* counter = new freqCounter();
-    Tree* tree = new Tree();
-
-    init->check_amount_of_inputs(argc);
-    init->check_extension(argv);
-
-    auto freqtable = counter->readFile(argv[1]);
-
-    // adding everything at priority_queue
-    for (const auto& par : freqtable) {
-        tree->pq.push(new Node(nullptr, nullptr, par.first, par.second));
-    }
-
-    Node* p = tree->generateTree(tree->pq);
-    tree->codifyTree(p);
-    printTree(p);
-    tree->compress(argv[1], p);
 }
