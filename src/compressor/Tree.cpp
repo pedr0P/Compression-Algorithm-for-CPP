@@ -2,7 +2,6 @@
 #include <algorithm>
 #include <filesystem>
 #include <fstream>
-#include <iostream>
 #include <string>
 
 Node* glob = nullptr;
@@ -141,7 +140,6 @@ void Tree::compress(std::string filename, Node* root){
                 tmp = buffer[buffer.size()-1];
                 buffer.pop_back();
             }
-            std::cout << buffer << '\n';
             outfile << to_bin(buffer);
             std::reverse(tmp.begin(), tmp.end());
             buffer = tmp;
