@@ -3,7 +3,7 @@
 #include "../freqCounter/freqCounter.cpp"
 #include "Tree.cpp"
 
-
+//auxiliary function to print the tree
 void printTree(Node* node, const std::string& prefix = "", bool isLeft = true) {
     if (node != nullptr) {
         std::cout << prefix;
@@ -21,6 +21,7 @@ void printTree(Node* node, const std::string& prefix = "", bool isLeft = true) {
         printTree(node->right, prefix + (isLeft ? "│   " : "    "), false);
     }
 }
+
 // aux function
 void printTreeFromRoot(Node* root) {
     std::cout << "Árvore:" << std::endl;
@@ -33,28 +34,21 @@ int main(int argc, char *argv[]) {
     Tree* tree = new Tree();
 
     init->check_amount_of_inputs(argc);
-    init->check_extension(argv);
 
     auto freqtable = counter->readFile(argv[1]);
 
-    // adding everything at priority_queue
+    //adding everything at priority_queue
     for (const auto& par : freqtable) {
         tree->pq.push(new Node(nullptr, nullptr, par.first, par.second));
     }
 
+    //generating the tree
     Node* p = tree->generateTree(tree->pq);
+
+    //putting the codes on the nodes
     tree->codifyTree(p);
+
+    //compress algorithm
     tree->compress(argv[1], p);
 
-    // Tests:
-    //printing the priority_queue
-    // while (!tree->pq.empty()) {
-    //     const auto& topo = tree->pq.top();
-    //     std::cout << "Chave: " << topo->symbol << ", Valor: " << topo->value << std::endl;
-    //     tree->pq.pop();
-    // }
-    
-    // Node* p = tree->generateTree(tree->pq);
-    // tree->codifyTree(p);
-    // printTreeFromRoot(p);
 }

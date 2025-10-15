@@ -20,7 +20,6 @@ int main(int argc, char *argv[]){
     freqCounter* counter = new freqCounter();
 
     init->check_amount_of_inputs(argc);
-    init->check_extension(argv);
 
     if (init->ready_to_read){
         auto freqtable = counter->readFile(argv[1]);

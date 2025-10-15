@@ -4,10 +4,11 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-// With help (but not copying) from: https://www.geeksforgeeks.org/dsa/huffman-coding-greedy-algo-3
 
 Node* glob = nullptr;
 
+//generate tree recursivelly
+// With help (but not copying) from: https://www.geeksforgeeks.org/dsa/huffman-coding-greedy-algo-3
 Node* Tree::generateTree(std::priority_queue<Node*, std::vector<Node*>, CompareByKey> &pq){
     while (pq.size() >= 2) {
         Node* left = pq.top();
@@ -20,8 +21,8 @@ Node* Tree::generateTree(std::priority_queue<Node*, std::vector<Node*>, CompareB
 
         pq.push(nd);
     }
-    Node* tree = pq.top();
-    return tree;
+    Node* tree = pq.top(); 
+    return tree; //return the root with all his children
 }
 
 void getNodeBySymbol(std::string symbol, Node* tree){
@@ -30,6 +31,7 @@ void getNodeBySymbol(std::string symbol, Node* tree){
     if (tree->right != nullptr) getNodeBySymbol(symbol, tree->right);
 }
 
+//simulates a binary operation 
 unsigned char to_bin(std::string str) {
     unsigned char res{0};
     for (int i{int(str.size()-1)}; i >= 0; --i) {
@@ -48,17 +50,19 @@ unsigned char to_bin(std::string str) {
     return res;
 }
 
+//insert the codes at all nodes
 void Tree::codifyTree(Node* root){
     if (root->left){
-        root->left->code = root->code + "0";
+        root->left->code = root->code + "0"; //if right, code with 0
         codifyTree(root->left);
     }
     if (root->right){
-        root->right->code = root->code + "1";
+        root->right->code = root->code + "1"; //if left, code with 1
         codifyTree(root->right);
     }
 }
 
+//the compression function
 void Tree::compress(std::string filename, Node* root){
     std::vector<std::string> words;
     std::ifstream file;
@@ -68,10 +72,13 @@ void Tree::compress(std::string filename, Node* root){
 
     file.open(std::filesystem::path(filename));
 
+    //for every line of the code
     while (std::getline(file, line)){
         words.clear();
         if (!line.empty()){
             std::string str;
+
+            //get all the words separated by space and put at words vector
             for (size_t i{0}; i < line.size(); ++i) {
                 char c = line[i];
                 if (c != ' ') {
@@ -91,14 +98,15 @@ void Tree::compress(std::string filename, Node* root){
                 }
             }
 
+            //scan the words vector
             for (size_t i{0}; i < words.size(); ++i){
                 getNodeBySymbol(words[i], root); 
-                if (glob  != nullptr) {
-                    words[i] = glob->code;
+                if (glob  != nullptr) {    //if i find the symbol at the tree,
+                    words[i] = glob->code; //turn the word into his code
                 }
-                else {
+                else { //if i dont find the symbol at the tree
                     std::string tmp = "";
-                    for (char c : words[i]){
+                    for (char c : words[i]){ //find the code of all the characters of the word.
 
                         std::string s;
                         s.push_back(c);
@@ -121,13 +129,15 @@ void Tree::compress(std::string filename, Node* root){
             isOpen = true;
         }
 
+        //this is the algorithm that actually compress the code
         std::string buffer;
         std::string tmp;
         for (std::string s : words){
             while(buffer.size() <= 8) {
-                buffer += s;
+                buffer += s; //increments the buffer with the code s
             }
-            while (buffer.size() > 8) {
+            //to avoid memory problems, the buffer written in file must have 8 bits
+            while (buffer.size() > 8) { 
                 tmp = buffer[buffer.size()-1];
                 buffer.pop_back();
             }
