@@ -1,1 +1,1 @@
-return larari lararo int int pedro int theo
+int main;
